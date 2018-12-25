@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class WakeDemo extends Activity implements OnClickListener {
+    //z-1.0.1 
     private String TAG = "ivw";
     private Toast mToast;
     private TextView textView;
