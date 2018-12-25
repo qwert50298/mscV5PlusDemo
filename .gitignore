@@ -1,0 +1,14 @@
+target/
+.idea/
+*.iml
+*.cmd
+gen/
+.gradle
+local.properties
+build/
+.DS_Store
+ui/src/kb/
+captures/
+libs/
+build.gradle
+lint.xml
