@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Users/taoxingyu/Documents/androidApplication/mscV5PlusDemo/libs"><file name="Msc.jar" path="/Users/taoxingyu/Documents/androidApplication/mscV5PlusDemo/libs/Msc.jar"/><file name="armeabi/libmsc.so" path="/Users/taoxingyu/Documents/androidApplication/mscV5PlusDemo/libs/armeabi/libmsc.so"/></source></dataSet><dataSet config="debug"><source path="/Users/taoxingyu/Documents/androidApplication/mscV5PlusDemo/src/debug/jniLibs"/></dataSet></merger>
