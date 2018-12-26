@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.iflytek.mscv5plusdemo"
     android:versionCode="1"
     android:versionName="1.0"
     >
 
     <application
+        android:debuggable="true"
         android:icon="@drawable/icon"
         android:name="SpeechApp"
         android:label="讯飞语音示例v5+"
-         >
+        tools:ignore="HardcodedDebugMode">
         <activity
             android:name="com.iflytek.mscv5plusdemo.MainActivity"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"

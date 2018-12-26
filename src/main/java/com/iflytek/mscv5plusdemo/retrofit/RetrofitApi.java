@@ -18,8 +18,8 @@ public interface RetrofitApi {
     @GET("book/{id}")
     Call<ResponseBody> getNews(@Path("id") int id);
 
-    @Headers({"Content-Type: application/json","Accept:  application/json"})
-    @POST("/test")
+    @Headers({"Content-Type: application/json", "Accept:  application/json"})
+    @POST("/iot/taoxingyu")
     Call<Task> createTask(@Body Task task);
 
 }

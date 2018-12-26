@@ -35,6 +35,7 @@ import com.iflytek.cloud.ui.RecognizerDialogListener;
 import com.iflytek.cloud.util.ResourceUtil;
 import com.iflytek.cloud.util.ResourceUtil.RESOURCE_TYPE;
 import com.iflytek.mscv5plusdemo.retrofit.RetrofitApi;
+import com.iflytek.mscv5plusdemo.retrofit.Task;
 import com.iflytek.speech.setting.IatSettings;
 import com.iflytek.speech.util.JsonParser;
 import com.orhanobut.logger.Logger;
@@ -50,6 +51,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WakeDemo extends Activity implements OnClickListener {
     //z-1.0.1 
@@ -502,19 +504,21 @@ public class WakeDemo extends Activity implements OnClickListener {
         //创建retrofit对象
         Retrofit retrofit = new Retrofit.Builder()
                 //使用自定义的mGsonConverterFactory
-                //.addConverterFactory(GsonConverterFactory.create())
-                .baseUrl("https://api.douban.com/v2/")
+                .addConverterFactory(GsonConverterFactory.create())
+                //.baseUrl("https://api.douban.com/v2/")
+                .baseUrl("http://10.23.12.39:8080")
                 .build();
         // 实例化我们的mApi对象
         RetrofitApi mApi = retrofit.create(RetrofitApi.class);
-        Call<ResponseBody> call = mApi.getNews(1220562);
-        //Task task = new Task(1, text);
-        //Call<Task> call = mApi.createTask(task);
-        call.enqueue(new Callback<ResponseBody>() {
+        //Call<ResponseBody> call = mApi.getNews(1220562);
+        Task task = new Task(1, text);
+        Call<Task> call = mApi.createTask(task);
+        /*call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    Logger.i(response.body().string());
+                    String text = response.body().string();
+                    Logger.i(text);
                     Logger.i("success");
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -523,6 +527,18 @@ public class WakeDemo extends Activity implements OnClickListener {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Logger.i("failure");
+            }
+        });*/
+        call.enqueue(new Callback<Task>() {
+            @Override
+            public void onResponse(Call<Task> call, Response<Task> response) {
+                String test = response.body().toString();
+                Logger.i("success");
+            }
+
+            @Override
+            public void onFailure(Call<Task> call, Throwable t) {
                 Logger.i("failure");
             }
         });
