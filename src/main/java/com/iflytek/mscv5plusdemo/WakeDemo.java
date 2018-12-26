@@ -1,22 +1,16 @@
 package com.iflytek.mscv5plusdemo;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SeekBar;
@@ -40,15 +34,22 @@ import com.iflytek.cloud.ui.RecognizerDialog;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
 import com.iflytek.cloud.util.ResourceUtil;
 import com.iflytek.cloud.util.ResourceUtil.RESOURCE_TYPE;
+import com.iflytek.mscv5plusdemo.retrofit.RetrofitApi;
 import com.iflytek.speech.setting.IatSettings;
 import com.iflytek.speech.util.JsonParser;
+import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class WakeDemo extends Activity implements OnClickListener {
     //z-1.0.1 
@@ -264,7 +265,11 @@ public class WakeDemo extends Activity implements OnClickListener {
                 buffer.append("\n");
                 buffer.append("【尾端点】" + object.optString("eos"));
                 resultString = buffer.toString();
-                startIat(mContext);
+                //判断唤醒是否在监听，监听的话就停止监听
+                if (mIvw.isListening()) {
+                    mIvw.stopListening();
+                    startIat(mContext);
+                }
 
             } catch (JSONException e) {
                 resultString = "结果解析出错";
@@ -448,7 +453,8 @@ public class WakeDemo extends Activity implements OnClickListener {
 
     private boolean mTranslateEnable = false;
 
-
+    //语音识别的结果
+    private String text;
     /**
      * 听写UI监听器
      */
@@ -460,10 +466,20 @@ public class WakeDemo extends Activity implements OnClickListener {
                 textView.append("\n 获得语音翻译结果：\n");
                 printTransResult(results);
             } else {
-                String text = JsonParser.parseIatResult(results.getResultString());
+                text = JsonParser.parseIatResult(results.getResultString());
                 textView.append("\n 获得语音翻译结果：\n");
                 textView.append("\n" + text);
 //                mResultText.setSelection(mResultText.length());
+            }
+            //发送语音识别的结果到后台
+            sendMessage(text);
+            //判断语音识别是否处于监听状态，处于监听状态则关闭
+            if (mIat.isListening()) {
+                mIat.stopListening();
+            }
+            //判断语音唤醒是否处于监听状态，不处于则开始监听
+            if (!mIvw.isListening()) {
+                mIvw.startListening(mWakeuperListener);
             }
         }
 
@@ -480,6 +496,37 @@ public class WakeDemo extends Activity implements OnClickListener {
 
     };
 
+    //发送语音识别的文字
+    private void sendMessage(String text) {
+        Logger.i(text);
+        //创建retrofit对象
+        Retrofit retrofit = new Retrofit.Builder()
+                //使用自定义的mGsonConverterFactory
+                //.addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("https://api.douban.com/v2/")
+                .build();
+        // 实例化我们的mApi对象
+        RetrofitApi mApi = retrofit.create(RetrofitApi.class);
+        Call<ResponseBody> call = mApi.getNews(1220562);
+        //Task task = new Task(1, text);
+        //Call<Task> call = mApi.createTask(task);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    Logger.i(response.body().string());
+                    Logger.i("success");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Logger.i("failure");
+            }
+        });
+    }
 
     private void printTransResult(RecognizerResult results) {
         String trans = JsonParser.parseTransResult(results.getResultString(), "dst");
