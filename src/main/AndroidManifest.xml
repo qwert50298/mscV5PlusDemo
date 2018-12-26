@@ -13,7 +13,7 @@
         android:label="讯飞语音示例v5+"
         tools:ignore="HardcodedDebugMode">
         <activity
-            android:name="com.iflytek.mscv5plusdemo.MainActivity"
+            android:name="com.iflytek.mscv5plusdemo.WakeDemo"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
             android:icon="@drawable/icon"
             android:label="讯飞语音示例v5+"
@@ -28,17 +28,17 @@
         </activity>
         <activity android:name="com.iflytek.speech.setting.IatSettings" >
         </activity>
-        <activity
+        <!--<activity
             android:name="com.iflytek.mscv5plusdemo.IatDemo"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
             android:screenOrientation="portrait" >
-        </activity>
+        </activity>-->
         <activity
             android:name="com.iflytek.mscv5plusdemo.AsrDemo"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
             android:screenOrientation="portrait" >
         </activity>
-        <activity
+        <!--<activity
             android:name="com.iflytek.mscv5plusdemo.TtsDemo"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
             android:screenOrientation="portrait" >
@@ -47,17 +47,17 @@
             android:name="com.iflytek.mscv5plusdemo.IvwActivity"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
             android:screenOrientation="portrait" >
-        </activity>
-        <activity
+        </activity>-->
+        <!--<activity
             android:name="com.iflytek.mscv5plusdemo.WakeDemo"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
             android:screenOrientation="portrait" >
-        </activity>
-        <activity
+        </activity>-->
+        <!--<activity
             android:name="com.iflytek.mscv5plusdemo.OneShotDemo"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
             android:screenOrientation="portrait" >
-        </activity>
+        </activity>-->
     </application>
 
     <uses-sdk android:minSdkVersion="8" />
@@ -68,7 +68,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.WRITE_SETTINGS" />

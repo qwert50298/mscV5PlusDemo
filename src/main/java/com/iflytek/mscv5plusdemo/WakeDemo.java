@@ -1,11 +1,15 @@
 package com.iflytek.mscv5plusdemo;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -82,10 +86,35 @@ public class WakeDemo extends Activity implements OnClickListener {
         setContentView(R.layout.wake_activity);
         mSharedPreferences = getSharedPreferences(IatSettings.PREFER_NAME, Activity.MODE_PRIVATE);
         mContext = getApplicationContext();
+        requestPermissions();
         initUi();
         // 初始化唤醒对象
         mIvw = VoiceWakeuper.createWakeuper(this, null);
     }
+
+    private void requestPermissions() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                int permission = ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (permission != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.LOCATION_HARDWARE, Manifest.permission.READ_PHONE_STATE,
+                            Manifest.permission.WRITE_SETTINGS, Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_CONTACTS}, 0x0010);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
 
     @SuppressLint("ShowToast")
     private void initUi() {
@@ -457,6 +486,7 @@ public class WakeDemo extends Activity implements OnClickListener {
 
     //语音识别的结果
     private String text;
+    private String tttt = null;
     /**
      * 听写UI监听器
      */
@@ -474,7 +504,9 @@ public class WakeDemo extends Activity implements OnClickListener {
 //                mResultText.setSelection(mResultText.length());
             }
             //发送语音识别的结果到后台
-            sendMessage(text);
+            if (!text.equals("。")) {
+                sendMessage(text);
+            }
             //判断语音识别是否处于监听状态，处于监听状态则关闭
             if (mIat.isListening()) {
                 mIat.stopListening();
@@ -506,7 +538,7 @@ public class WakeDemo extends Activity implements OnClickListener {
                 //使用自定义的mGsonConverterFactory
                 .addConverterFactory(GsonConverterFactory.create())
                 //.baseUrl("https://api.douban.com/v2/")
-                .baseUrl("http://10.23.12.39:8080")
+                .baseUrl("http://172.27.12.226:8080")
                 .build();
         // 实例化我们的mApi对象
         RetrofitApi mApi = retrofit.create(RetrofitApi.class);
@@ -533,12 +565,13 @@ public class WakeDemo extends Activity implements OnClickListener {
         call.enqueue(new Callback<Task>() {
             @Override
             public void onResponse(Call<Task> call, Response<Task> response) {
-                String test = response.body().toString();
+                tttt = response.body().toString();
                 Logger.i("success");
             }
 
             @Override
             public void onFailure(Call<Task> call, Throwable t) {
+                tttt = t.getMessage();
                 Logger.i("failure");
             }
         });
