@@ -3,15 +3,16 @@ apply plugin: 'com.android.application'
 buildscript {
 
     repositories {
-        google()
         jcenter()
+        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
 
-
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+
+
     }
 }
 
@@ -57,4 +58,20 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:25.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     //implementation files('libs/bdasr_V3_20180801_d6f298a.jar')
+
+
+    implementation "com.squareup.retrofit2:retrofit:2.0.2"
+    implementation "com.squareup.retrofit2:converter-gson:2.3.0"
+
+}
+
+repositories {
+    google()
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        google()
+    }
 }
