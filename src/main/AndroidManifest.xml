@@ -2,18 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.iflytek.mscv5plusdemo"
-    android:versionCode="1"
-    android:versionName="1.0"
     >
 
     <application
         android:debuggable="true"
         android:icon="@drawable/icon"
-        android:name="SpeechApp"
+        android:name=".speech.SpeechApp"
         android:label="讯飞语音示例v5+"
-        tools:ignore="HardcodedDebugMode">
+        tools:ignore="HardcodedDebugMode"
+        tools:replace="label">
         <activity
-            android:name="com.iflytek.mscv5plusdemo.WakeDemo"
+            android:name=".speech.WakeDemo"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
             android:icon="@drawable/icon"
             android:label="讯飞语音示例v5+"
@@ -24,43 +23,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.iflytek.speech.setting.TtsSettings" >
-        </activity>
-        <activity android:name="com.iflytek.speech.setting.IatSettings" >
-        </activity>
-        <!--<activity
-            android:name="com.iflytek.mscv5plusdemo.IatDemo"
-            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
-            android:screenOrientation="portrait" >
-        </activity>-->
         <activity
-            android:name="com.iflytek.mscv5plusdemo.AsrDemo"
+            android:name="com.iflytek.mscv5plusdemo.bridgewebview.BridgeWebViewActivity"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat">
         </activity>
-        <!--<activity
-            android:name="com.iflytek.mscv5plusdemo.TtsDemo"
-            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
-            android:screenOrientation="portrait" >
+        <activity android:name=".speech.setting.TtsSettings" >
         </activity>
-        <activity
-            android:name="com.iflytek.mscv5plusdemo.IvwActivity"
-            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
-            android:screenOrientation="portrait" >
-        </activity>-->
-        <!--<activity
-            android:name="com.iflytek.mscv5plusdemo.WakeDemo"
-            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
-            android:screenOrientation="portrait" >
-        </activity>-->
-        <!--<activity
-            android:name="com.iflytek.mscv5plusdemo.OneShotDemo"
-            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
-            android:screenOrientation="portrait" >
-        </activity>-->
+        <activity android:name=".speech.setting.IatSettings" >
+        </activity>
     </application>
 
-    <uses-sdk android:minSdkVersion="8" />
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -77,6 +51,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
 
 

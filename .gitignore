@@ -4,3 +4,5 @@ gen/
 .gradle
 local.properties
 build/
+/gradlew
+/gradlew.bat
