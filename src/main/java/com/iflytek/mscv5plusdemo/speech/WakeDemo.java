@@ -40,12 +40,11 @@ import com.iflytek.cloud.ui.RecognizerDialogListener;
 import com.iflytek.cloud.util.ResourceUtil;
 import com.iflytek.cloud.util.ResourceUtil.RESOURCE_TYPE;
 import com.iflytek.mscv5plusdemo.R;
-import com.iflytek.mscv5plusdemo.bridgewebview.BridgeWebView;
 import com.iflytek.mscv5plusdemo.bridgewebview.BridgeWebViewActivity;
 import com.iflytek.mscv5plusdemo.retrofit.RetrofitApi;
 import com.iflytek.mscv5plusdemo.retrofit.Task;
-import com.iflytek.mscv5plusdemo.speech.util.JsonParser;
 import com.iflytek.mscv5plusdemo.speech.setting.IatSettings;
+import com.iflytek.mscv5plusdemo.speech.util.JsonParser;
 import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
@@ -487,7 +486,7 @@ public class WakeDemo extends Activity implements OnClickListener {
 
     //语音识别的结果
     private String text;
-    private String tttt = null;
+    private String responseMessage = null;
     /**
      * 听写UI监听器
      */
@@ -540,12 +539,13 @@ public class WakeDemo extends Activity implements OnClickListener {
                 .addConverterFactory(GsonConverterFactory.create())
                 //.baseUrl("https://api.douban.com/v2/")
                 .baseUrl("http://172.27.12.226:8080")
+                //.baseUrl("http://192.168.1.108:8080")
                 .build();
         // 实例化我们的mApi对象
         RetrofitApi mApi = retrofit.create(RetrofitApi.class);
         //Call<ResponseBody> call = mApi.getNews(1220562);
         Task task = new Task(1, text);
-        Call<Task> call = mApi.createTask(task);
+        Call<Object> call = mApi.createTask(task);
         /*call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -563,18 +563,27 @@ public class WakeDemo extends Activity implements OnClickListener {
                 Logger.i("failure");
             }
         });*/
-        call.enqueue(new Callback<Task>() {
+        call.enqueue(new Callback<Object>() {
             @Override
-            public void onResponse(Call<Task> call, Response<Task> response) {
-                tttt = response.body().toString();
-                Intent intent =new Intent(WakeDemo.this, BridgeWebViewActivity.class);
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                JSONObject jsonObject = null;
+                Bundle bundle = new Bundle();
+                try {
+                    jsonObject = new JSONObject(response.body().toString());
+                    bundle.putString("result", jsonObject.getString("result"));
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Intent intent = new Intent(WakeDemo.this, BridgeWebViewActivity.class);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 Logger.i("success");
             }
 
             @Override
-            public void onFailure(Call<Task> call, Throwable t) {
-                tttt = t.getMessage();
+            public void onFailure(Call<Object> call, Throwable t) {
+                responseMessage = t.getMessage();
                 Logger.i("failure");
             }
         });

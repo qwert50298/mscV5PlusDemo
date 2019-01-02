@@ -63,6 +63,7 @@ dependencies {
     compile 'com.orhanobut:logger:2.1.1'
     compile 'com.github.jiyouliang:BridgeWebView:v1.1'
     implementation files('libs/open_sdk_r5509.jar')
+    implementation 'com.alibaba:fastjson:1.1.55.android'
 }
 
 repositories {

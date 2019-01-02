@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.itheima.view.BridgeWebView
+    <com.iflytek.mscv5plusdemo.bridgewebview.BridgeWebView
         android:id="@+id/weview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

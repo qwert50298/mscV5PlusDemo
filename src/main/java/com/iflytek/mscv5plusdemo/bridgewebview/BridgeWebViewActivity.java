@@ -11,14 +11,16 @@ import com.iflytek.mscv5plusdemo.R;
  * Created by taoxingyu on 2018/12/28.
  */
 
-public class BridgeWebViewActivity extends AppCompatActivity{
+public class BridgeWebViewActivity extends AppCompatActivity {
 
     private BridgeWebView mWeview;
+    public static String result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        result = getIntent().getExtras().getString("result");
         initView();
         setWebViewClient();
     }
