@@ -20,6 +20,6 @@ public interface RetrofitApi {
 
     @Headers({"Content-Type: application/json", "Accept:  application/json"})
     @POST("/access/login")
-    Call<Task> createTask(@Body Task task);
+    Call<Object> createTask(@Body Task task);
 
 }
