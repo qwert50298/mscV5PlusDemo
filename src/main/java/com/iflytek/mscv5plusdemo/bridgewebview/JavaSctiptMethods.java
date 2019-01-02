@@ -1,23 +1,10 @@
 package com.iflytek.mscv5plusdemo.bridgewebview;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.WebView;
 import android.widget.Toast;
-
-
-import com.tencent.connect.share.QQShare;
-import com.tencent.open.utils.ThreadManager;
-import com.tencent.tauth.IUiListener;
-import com.tencent.tauth.Tencent;
-import com.tencent.tauth.UiError;
 
 import org.json.JSONException;
 import org.json.JSONObject;

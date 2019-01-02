@@ -23,7 +23,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.RecognizerListener;
@@ -44,8 +43,8 @@ import com.iflytek.mscv5plusdemo.R;
 import com.iflytek.mscv5plusdemo.bridgewebview.BridgeWebViewActivity;
 import com.iflytek.mscv5plusdemo.retrofit.RetrofitApi;
 import com.iflytek.mscv5plusdemo.retrofit.Task;
-import com.iflytek.mscv5plusdemo.speech.util.JsonParser;
 import com.iflytek.mscv5plusdemo.speech.setting.IatSettings;
+import com.iflytek.mscv5plusdemo.speech.util.JsonParser;
 import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
