@@ -40,12 +40,11 @@ import com.iflytek.cloud.ui.RecognizerDialogListener;
 import com.iflytek.cloud.util.ResourceUtil;
 import com.iflytek.cloud.util.ResourceUtil.RESOURCE_TYPE;
 import com.iflytek.mscv5plusdemo.R;
-import com.iflytek.mscv5plusdemo.bridgewebview.BridgeWebView;
 import com.iflytek.mscv5plusdemo.bridgewebview.BridgeWebViewActivity;
 import com.iflytek.mscv5plusdemo.retrofit.RetrofitApi;
 import com.iflytek.mscv5plusdemo.retrofit.Task;
-import com.iflytek.mscv5plusdemo.speech.util.JsonParser;
 import com.iflytek.mscv5plusdemo.speech.setting.IatSettings;
+import com.iflytek.mscv5plusdemo.speech.util.JsonParser;
 import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
