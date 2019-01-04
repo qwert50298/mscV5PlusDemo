@@ -1,4 +1,4 @@
-package com.iflytek.mscv5plusdemo.speech.util;
+package com.iflytek.mscv5plusdemo.util;
 import java.io.IOException;
 import java.io.InputStream;
 import android.content.Context;

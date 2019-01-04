@@ -1,4 +1,4 @@
-package com.iflytek.mscv5plusdemo.speech.util;
+package com.iflytek.mscv5plusdemo.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

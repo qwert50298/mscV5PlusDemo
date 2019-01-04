@@ -8,11 +8,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-
-
     }
 }
 
@@ -28,12 +23,6 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    /*defaultConfig {
-        applicationId "com.iflytek.mscv5plusdemo"
-        minSdkVersion 9
-        targetSdkVersion 23
-    }*/
-
     buildTypes {
         release {
             minifyEnabled false
@@ -47,11 +36,6 @@ android {
         }
     }
 }
-
-/*dependencies {
-    compile files('libs/Msc.jar')
-    compile 'com.android.support:support-v4:25.+'
-}*/
 dependencies {
     implementation files('libs/Msc.jar')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -64,6 +48,7 @@ dependencies {
     compile 'com.github.jiyouliang:BridgeWebView:v1.1'
     implementation files('libs/open_sdk_r5509.jar')
     implementation 'com.alibaba:fastjson:1.1.55.android'
+    compile files('libs/sun.misc.BASE64Decoder.jar')
 }
 
 repositories {

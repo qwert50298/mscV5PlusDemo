@@ -44,7 +44,7 @@ import com.iflytek.mscv5plusdemo.bridgewebview.BridgeWebViewActivity;
 import com.iflytek.mscv5plusdemo.retrofit.RetrofitApi;
 import com.iflytek.mscv5plusdemo.retrofit.Task;
 import com.iflytek.mscv5plusdemo.speech.setting.IatSettings;
-import com.iflytek.mscv5plusdemo.speech.util.JsonParser;
+import com.iflytek.mscv5plusdemo.util.JsonParser;
 import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
@@ -86,33 +86,9 @@ public class WakeDemo extends Activity implements OnClickListener {
         setContentView(R.layout.wake_activity);
         mSharedPreferences = getSharedPreferences(IatSettings.PREFER_NAME, Activity.MODE_PRIVATE);
         mContext = getApplicationContext();
-        requestPermissions();
         initUi();
         // 初始化唤醒对象
         mIvw = VoiceWakeuper.createWakeuper(this, null);
-    }
-
-    private void requestPermissions() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                int permission = ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                if (permission != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, new String[]{
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.LOCATION_HARDWARE, Manifest.permission.READ_PHONE_STATE,
-                            Manifest.permission.WRITE_SETTINGS, Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_CONTACTS}, 0x0010);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 
@@ -531,7 +507,7 @@ public class WakeDemo extends Activity implements OnClickListener {
     };
 
     //发送语音识别的文字
-    private void sendMessage(String text) {
+    private void sendMessage(final String text) {
         Logger.i(text);
         //创建retrofit对象
         Retrofit retrofit = new Retrofit.Builder()
@@ -543,34 +519,17 @@ public class WakeDemo extends Activity implements OnClickListener {
                 .build();
         // 实例化我们的mApi对象
         RetrofitApi mApi = retrofit.create(RetrofitApi.class);
-        //Call<ResponseBody> call = mApi.getNews(1220562);
         Task task = new Task(1, text);
         Call<Object> call = mApi.createTask(task);
-        /*call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    String text = response.body().string();
-                    Logger.i(text);
-                    Logger.i("success");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Logger.i("failure");
-            }
-        });*/
         call.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
-                JSONObject jsonObject = null;
+                JSONObject jsonObject;
                 Bundle bundle = new Bundle();
                 try {
                     jsonObject = new JSONObject(response.body().toString());
                     bundle.putString("result", jsonObject.getString("result"));
+                    bundle.putString("voiceMessage", text);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
