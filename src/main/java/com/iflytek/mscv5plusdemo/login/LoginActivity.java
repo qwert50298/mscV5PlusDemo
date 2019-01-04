@@ -211,7 +211,7 @@ public class LoginActivity extends Activity
 
     /**
      * 模拟登录情况
-     * 用户名csdn，密码123456，就能登录成功，否则登录失败
+     * 用户名txy，密码123456，就能登录成功，否则登录失败
      */
     private void login() {
 
@@ -243,7 +243,7 @@ public class LoginActivity extends Activity
                 }
 
                 //判断账号和密码
-                if (getAccount().equals("csdn") && getPassword().equals("123456")) {
+                if (getAccount().equals("txy") && getPassword().equals("123456")) {
                     showToast("登录成功");
                     loadCheckBoxState();//记录下当前用户记住密码和自动登录的状态;
 
