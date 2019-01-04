@@ -1,4 +1,4 @@
-package com.iflytek.mscv5plusdemo.speech.util;
+package com.iflytek.mscv5plusdemo.util;
 
 import java.util.regex.Pattern;
 import android.content.Context;

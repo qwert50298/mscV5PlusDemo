@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">讯飞语音示例v5+</string>
+    <string name="app_name">产互语音助手</string>
     <!-- 请替换成在语音云官网申请的appid -->
     <string name="app_id">5c203d75</string>
     <string name="example_explain">本示例为讯飞语音Android平台开发者提供语音听写、语法识别、语义理解和语音合成等代码样例，旨在让用户能够依据该示例快速开发出基于语音接口的应用程序。</string>
@@ -9,7 +9,14 @@
     <string name="text_tts_source_en">iFLYTEK is a national key software enterprise dedicated to the research of intelligent speech and language technologies, development of software and chip products, provision of speech information services, and integration of E-government systems. The intelligent speech technology of iFLYTEK, the core technology of the company, represents the top level in the world.</string>
     <string name="text_isr_abnf_hint">\t上传内容为：\n\t#ABNF 1.0 gb2312;\n\tlanguage zh-CN;\n\tmode voice;\n\troot $main;\n\t$main = $place1 到$place2 ;\n\t$place1 = 北京 | 武汉 | 南京 | 天津 | 东京;\n\t$place2 = 上海 | 合肥;</string>
     <string name="text_understand_hint">\t您可以说：\n\t今天的天气怎么样?\n\t北京到上海的火车?\n\t来首歌吧?\n\n\t更多语义请登录：\n\thttp://aiui.xfyun.cn/ \n\t配置您的专属语义吧!</string>
-    	
+
+    <string name="account">请输入登录的账号</string>
+    <string name="password">请输入登录密码</string>
+    <string name="check_password">记住密码</string>
+    <string name="check_login">自动登录</string>
+    <string name="login">登录</string>
+    <string name="loading">正在加载数据</string>
+
     <!-- 听写 -->
     <string name="text_begin">请开始说话&#8230;</string>
     <string name="text_begin_recognizer">开始音频流识别</string>

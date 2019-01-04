@@ -8,23 +8,30 @@
         android:debuggable="true"
         android:icon="@drawable/icon"
         android:name=".speech.SpeechApp"
-        android:label="讯飞语音示例v5+"
+        android:label="产互语音助手"
         tools:ignore="HardcodedDebugMode"
         tools:replace="label">
+        <activity android:name=".login.LoginActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".login.LoginAfterActivity"/>
+
         <activity
             android:name=".speech.WakeDemo"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
             android:icon="@drawable/icon"
-            android:label="讯飞语音示例v5+"
+            android:label="产互语音助手"
             android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
-            android:name="com.iflytek.mscv5plusdemo.bridgewebview.BridgeWebViewActivity"
+            android:name=".bridgewebview.BridgeWebViewActivity"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat">

@@ -51,6 +51,7 @@ public class JavaSctiptMethods {
             JSONObject json = new JSONObject();
             //传值到js
             json.put("result", BridgeWebViewActivity.result);
+            json.put("voiceMessage", BridgeWebViewActivity.voiceMessage);
 
             //调用js方法必须在主线程
 //            webView.loadUrl("javascript:"+callback+"(" + json.toString() + ")");

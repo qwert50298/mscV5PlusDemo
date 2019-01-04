@@ -55,7 +55,7 @@
     function rendDetail(json) {
         console.log("js收到android回调=" + json);
         //返回信息
-        var sellerInfo = '<section id="qaInfo"><article><h5>服务器端返回：</h5></article><article><div class="more phone">' + json.result + '</div></article></section>';
+        var sellerInfo = '<section id="qaInfo"><article><div class="more phone">'  + json.voiceMessage + '<br/>' + json.result  + '</div></article></section>';
         //刷新页面
         $("#result-data").html(sellerInfo);
     }
