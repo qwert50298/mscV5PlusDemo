@@ -3,16 +3,25 @@ package com.iflytek.mscv5plusdemo.speech;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -32,6 +41,8 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechEvent;
 import com.iflytek.cloud.SpeechRecognizer;
+import com.iflytek.cloud.SpeechSynthesizer;
+import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.cloud.VoiceWakeuper;
 import com.iflytek.cloud.WakeuperListener;
 import com.iflytek.cloud.WakeuperResult;
@@ -50,6 +61,8 @@ import com.orhanobut.logger.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,6 +91,28 @@ public class WakeDemo extends Activity implements OnClickListener {
     private String ivwNetMode = "0";
     //private IvwActivity activity;
     private Context mContext;
+    private ResolveInfo homeInfo;
+
+    int ret = 0;// 函数调用返回值
+
+    // 语音听写对象
+    private SpeechRecognizer mIat;
+
+    // 语音听写UI
+    private RecognizerDialog mIatDialog;
+
+    private SharedPreferences mSharedPreferences;
+
+    // 默认识别模式为云端
+    private String mEngineType = "cloud";
+
+    private boolean mTranslateEnable = false;
+
+    //语音识别的结果
+    private String text;
+    private String responseMessage = null;
+    private ArrayList<info> mlist = new ArrayList<>();
+    private SpeechSynthesizer mTts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +121,11 @@ public class WakeDemo extends Activity implements OnClickListener {
         setContentView(R.layout.wake_activity);
         mSharedPreferences = getSharedPreferences(IatSettings.PREFER_NAME, Activity.MODE_PRIVATE);
         mContext = getApplicationContext();
+
+
+        PackageManager pm = getPackageManager();
+        homeInfo = pm.resolveActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME), 0);
+
         initUi();
         // 初始化唤醒对象
         mIvw = VoiceWakeuper.createWakeuper(this, null);
@@ -175,6 +215,7 @@ public class WakeDemo extends Activity implements OnClickListener {
                     // 设置唤醒录音保存路径，保存最近一分钟的音频
                     mIvw.setParameter(SpeechConstant.IVW_AUDIO_PATH, Environment.getExternalStorageDirectory().getPath() + "/msc/ivw.wav");
                     mIvw.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
+                    //mIvw.setParameter(SpeechConstant.VOICE_NAME, "xiaorong");//设置发音人 四川话
                     // 如有需要，设置 NOTIFY_RECORD_DATA 以实时通过 onEvent 返回录音音频流字节
                     //mIvw.setParameter( SpeechConstant.NOTIFY_RECORD_DATA, "1" );
 
@@ -445,24 +486,7 @@ public class WakeDemo extends Activity implements OnClickListener {
         }
     };
 
-    int ret = 0;// 函数调用返回值
 
-    // 语音听写对象
-    private SpeechRecognizer mIat;
-
-    // 语音听写UI
-    private RecognizerDialog mIatDialog;
-
-    private SharedPreferences mSharedPreferences;
-
-    // 默认识别模式为云端
-    private String mEngineType = "cloud";
-
-    private boolean mTranslateEnable = false;
-
-    //语音识别的结果
-    private String text;
-    private String responseMessage = null;
     /**
      * 听写UI监听器
      */
@@ -479,9 +503,11 @@ public class WakeDemo extends Activity implements OnClickListener {
                 textView.append("\n" + text);
 //                mResultText.setSelection(mResultText.length());
             }
-            //发送语音识别的结果到后台
+            //处理语音识别的结果
             if (!text.equals("。") && !text.equals("")) {
+                //发送语音识别的结果到后台
                 sendMessage(text);
+
             }
             //判断语音识别是否处于监听状态，处于监听状态则关闭
             if (mIat.isListening()) {
@@ -506,6 +532,60 @@ public class WakeDemo extends Activity implements OnClickListener {
 
     };
 
+    public void gettelmessage() {
+        ContentResolver contentResolver = this.getContentResolver();
+        //获取总表的游标
+        Cursor cursorContacts = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+
+        while (cursorContacts.moveToNext()) {
+            //总表ID
+            int cursorid = cursorContacts.getInt(cursorContacts.getColumnIndex(ContactsContract.Contacts._ID));
+            //找中间表,以总表ID为条件查询中间表
+            Cursor cursorraw = contentResolver.query(ContactsContract.RawContacts.CONTENT_URI, null,
+                    ContactsContract.RawContacts._ID + " = ?", new String[]{cursorid + ""}, null);
+            //查询最后的表
+            while (cursorraw.moveToNext()) {
+                //中间表ID
+                int rawid = cursorraw.getInt(cursorraw.getColumnIndex(ContactsContract.RawContacts._ID));
+                info info = new info();
+                //名字
+                getname(contentResolver, rawid, info);
+                //电话号码
+                getnumber(contentResolver, rawid, info);
+                mlist.add(info);
+                Log.e("info---------------", info.toString());
+
+            }
+            cursorraw.close();
+
+        }
+        cursorContacts.close();
+    }
+
+    private void getnumber(ContentResolver contentResolver, int rawid, info info) {
+        //查询电话
+        Cursor querydatab = contentResolver.query(ContactsContract.Data.
+                        CONTENT_URI, null, ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " =? ",
+                new String[]{rawid + "", ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE}, null);
+        while (querydatab.moveToNext()) {
+            String number = querydatab.getString(querydatab.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            info.setNumber(number);
+        }
+        querydatab.close();
+    }
+
+    private void getname(ContentResolver contentResolver, int rawid, info info) {
+        //查询内容表
+        Cursor querydataa = contentResolver.query(ContactsContract.Data.
+                        CONTENT_URI, null, ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " =? ",
+                new String[]{rawid + "", ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE}, null);
+        while (querydataa.moveToNext()) {
+            String name = querydataa.getString(querydataa.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME));
+            info.setName(name);
+        }
+        querydataa.close();
+    }
+
     //发送语音识别的文字
     private void sendMessage(final String text) {
         Logger.i(text);
@@ -524,19 +604,45 @@ public class WakeDemo extends Activity implements OnClickListener {
         call.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
+
                 JSONObject jsonObject;
-                Bundle bundle = new Bundle();
+                String result = null;
                 try {
                     jsonObject = new JSONObject(response.body().toString());
-                    bundle.putString("result", jsonObject.getString("result"));
-                    bundle.putString("voiceMessage", text);
-
+                    result = jsonObject.getString("result");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Intent intent = new Intent(WakeDemo.this, BridgeWebViewActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                //拨号
+                if (result.contains("打电话")) {
+                    gettelmessage();
+                    /**
+                     * 关键字“给”作为关键字
+                     * */
+                    int indexof = result.lastIndexOf("给");
+                    String user = result.substring(indexof + 1);
+                    for (int i = 0; i < mlist.size(); i++) {
+                        info inf = mlist.get(i);
+                        if (user.equals(inf.getName())) {
+                            Intent inten = new Intent(Intent.ACTION_CALL);
+                            inten.setData(Uri.parse("tel:" + inf.getNumber().trim()));
+                            if (ActivityCompat.checkSelfPermission(WakeDemo.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                                //return;
+                                Toast.makeText(WakeDemo.this, "没有拨号权限" + result, Toast.LENGTH_SHORT).show();
+                            }
+                            WakeDemo.this.startActivity(inten);
+                            return;
+                        }
+                    }
+                    Toast.makeText(WakeDemo.this, "通讯录没有找到这个人" + result, Toast.LENGTH_SHORT).show();
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("result", result);
+                    bundle.putString("voiceMessage", text);
+                    Intent intent = new Intent(WakeDemo.this, BridgeWebViewActivity.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
                 Logger.i("success");
             }
 
@@ -645,5 +751,49 @@ public class WakeDemo extends Activity implements OnClickListener {
         tempBuffer.append(ResourceUtil.generateResourcePath(this, ResourceUtil.RESOURCE_TYPE.assets, "asr/sms.jet"));
         //识别8k资源-使用8k的时候请解开注释
         return tempBuffer.toString();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();//activity永远不会自动退出了，而是处于后台。
+        moveTaskToBack(true);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //moveTaskToBack(true);
+            goToIdle();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void goToIdle() {
+
+        ActivityInfo ai = homeInfo.activityInfo;
+        Intent startIntent = new Intent(Intent.ACTION_MAIN);
+        startIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        startIntent.setComponent(new ComponentName(ai.packageName,
+                ai.name));
+        startActivitySafely(startIntent);
+
+    }
+
+    void startActivitySafely(Intent intent) {
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, "work wrongly", Toast.LENGTH_SHORT).show();
+        } catch (SecurityException e) {
+            Toast.makeText(this, "notsecurity", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Launcher does not have the permission to launch "
+                    + intent
+                    + ".Make sure to create a MAIN intent-filter for the corresponding activity "
+                    + "oruse the exported attribute for this activity.", e);
+        }
     }
 }
