@@ -1,5 +1,7 @@
 package com.iflytek.mscv5plusdemo.retrofit;
 
+import com.iflytek.mscv5plusdemo.retrofit.bean.SearchResult;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -7,6 +9,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by taoxingyu on 2018/12/26.
@@ -14,12 +17,7 @@ import retrofit2.http.Path;
 
 public interface RetrofitApi {
 
-    //@Headers("apikey:81bf9da930c7f9825a3c3383f1d8d766")
-    @GET("book/{id}")
-    Call<ResponseBody> getNews(@Path("id") int id);
-
-    @Headers({"Content-Type: application/json", "Accept:  application/json"})
-    @POST("/access/login")
-    Call<Object> createTask(@Body Task task);
-
+    @GET("/discovery/app/list")
+    Call<SearchResult> createTask(@Query("name") String name, @Query("page") int page,
+                                  @Query("pageSize") int pageSize);
 }

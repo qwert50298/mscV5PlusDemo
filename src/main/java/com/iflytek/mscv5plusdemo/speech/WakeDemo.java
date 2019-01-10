@@ -14,7 +14,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.ContactsContract;
@@ -41,8 +40,6 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechEvent;
 import com.iflytek.cloud.SpeechRecognizer;
-import com.iflytek.cloud.SpeechSynthesizer;
-import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.cloud.VoiceWakeuper;
 import com.iflytek.cloud.WakeuperListener;
 import com.iflytek.cloud.WakeuperResult;
@@ -53,7 +50,7 @@ import com.iflytek.cloud.util.ResourceUtil.RESOURCE_TYPE;
 import com.iflytek.mscv5plusdemo.R;
 import com.iflytek.mscv5plusdemo.bridgewebview.BridgeWebViewActivity;
 import com.iflytek.mscv5plusdemo.retrofit.RetrofitApi;
-import com.iflytek.mscv5plusdemo.retrofit.Task;
+import com.iflytek.mscv5plusdemo.retrofit.bean.SearchResult;
 import com.iflytek.mscv5plusdemo.speech.setting.IatSettings;
 import com.iflytek.mscv5plusdemo.util.JsonParser;
 import com.orhanobut.logger.Logger;
@@ -71,7 +68,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WakeDemo extends Activity implements OnClickListener {
-    //z-1.0.1 
+    //z-1.0.1
     private String TAG = "ivw";
     private Toast mToast;
     private TextView textView;
@@ -110,9 +107,7 @@ public class WakeDemo extends Activity implements OnClickListener {
 
     //语音识别的结果
     private String text;
-    private String responseMessage = null;
     private ArrayList<info> mlist = new ArrayList<>();
-    private SpeechSynthesizer mTts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -594,25 +589,19 @@ public class WakeDemo extends Activity implements OnClickListener {
                 //使用自定义的mGsonConverterFactory
                 .addConverterFactory(GsonConverterFactory.create())
                 //.baseUrl("https://api.douban.com/v2/")
-                .baseUrl("http://172.27.12.226:8080")
+                //.baseUrl("http://172.27.12.226:8080")
                 //.baseUrl("http://192.168.1.108:8080")
+                .baseUrl("http://ics-backend.unicom.dev.wochanye.com")
                 .build();
         // 实例化我们的mApi对象
         RetrofitApi mApi = retrofit.create(RetrofitApi.class);
-        Task task = new Task(1, text);
-        Call<Object> call = mApi.createTask(task);
-        call.enqueue(new Callback<Object>() {
+        Call<SearchResult> baseRespCall = mApi.createTask(text, 1, 50);
+        baseRespCall.enqueue(new Callback<SearchResult>() {
             @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
+            public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
 
-                JSONObject jsonObject;
-                String result = null;
-                try {
-                    jsonObject = new JSONObject(response.body().toString());
-                    result = jsonObject.getString("result");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                SearchResult searchResult = response.body();
+                String result = String.valueOf(searchResult.getData());
                 //拨号
                 if (result.contains("打电话")) {
                     gettelmessage();
@@ -647,8 +636,7 @@ public class WakeDemo extends Activity implements OnClickListener {
             }
 
             @Override
-            public void onFailure(Call<Object> call, Throwable t) {
-                responseMessage = t.getMessage();
+            public void onFailure(Call<SearchResult> call, Throwable t) {
                 Logger.i("failure");
             }
         });
