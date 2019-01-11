@@ -1,4 +1,4 @@
-package com.iflytek.mscv5plusdemo.retrofit.bean;
+package com.iflytek.mscv5plusdemo.bean;
 
 public class BaseResp {
 

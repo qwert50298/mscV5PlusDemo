@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.iflytek.mscv5plusdemo.speech.WakeDemo;
 import com.iflytek.mscv5plusdemo.util.Base64Utils;
 import com.iflytek.mscv5plusdemo.util.SharedPreferencesUtils;
-import com.iflytek.mscv5plusdemo.widget.LoadingDialog;
 import com.iflytek.mscv5plusdemo.R;
 
 /**

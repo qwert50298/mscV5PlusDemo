@@ -1,4 +1,4 @@
-package com.iflytek.mscv5plusdemo.widget;
+package com.iflytek.mscv5plusdemo.login;
 
 import android.app.ProgressDialog;
 import android.content.Context;

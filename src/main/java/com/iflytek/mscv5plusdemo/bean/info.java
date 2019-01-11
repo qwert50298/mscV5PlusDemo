@@ -1,4 +1,4 @@
-package com.iflytek.mscv5plusdemo.speech;
+package com.iflytek.mscv5plusdemo.bean;
 
 /**
  * Created by Administrator on 2016/11/20.

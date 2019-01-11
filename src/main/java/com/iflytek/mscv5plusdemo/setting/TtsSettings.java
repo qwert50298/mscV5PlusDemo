@@ -1,4 +1,4 @@
-package com.iflytek.mscv5plusdemo.speech.setting;
+package com.iflytek.mscv5plusdemo.setting;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;

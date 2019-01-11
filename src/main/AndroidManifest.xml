@@ -36,9 +36,9 @@
             android:theme="@style/Theme.AppCompat">
         </activity>
 
-        <activity android:name=".speech.setting.TtsSettings" >
+        <activity android:name=".setting.TtsSettings" >
         </activity>
-        <activity android:name=".speech.setting.IatSettings" >
+        <activity android:name=".setting.IatSettings" >
         </activity>
     </application>
 

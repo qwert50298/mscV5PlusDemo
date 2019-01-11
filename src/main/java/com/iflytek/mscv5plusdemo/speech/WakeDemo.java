@@ -48,10 +48,12 @@ import com.iflytek.cloud.ui.RecognizerDialogListener;
 import com.iflytek.cloud.util.ResourceUtil;
 import com.iflytek.cloud.util.ResourceUtil.RESOURCE_TYPE;
 import com.iflytek.mscv5plusdemo.R;
+import com.iflytek.mscv5plusdemo.bean.info;
 import com.iflytek.mscv5plusdemo.bridgewebview.BridgeWebViewActivity;
 import com.iflytek.mscv5plusdemo.retrofit.RetrofitApi;
-import com.iflytek.mscv5plusdemo.retrofit.bean.SearchResult;
-import com.iflytek.mscv5plusdemo.speech.setting.IatSettings;
+import com.iflytek.mscv5plusdemo.bean.DataList;
+import com.iflytek.mscv5plusdemo.bean.SearchResult;
+import com.iflytek.mscv5plusdemo.setting.IatSettings;
 import com.iflytek.mscv5plusdemo.util.JsonParser;
 import com.orhanobut.logger.Logger;
 
@@ -60,6 +62,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -601,7 +604,9 @@ public class WakeDemo extends Activity implements OnClickListener {
             public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
 
                 SearchResult searchResult = response.body();
-                String result = String.valueOf(searchResult.getData());
+                SearchResult.Data data = searchResult.getData();
+                List<DataList> list = data.getList();
+                String result = searchResult.toString();
                 //拨号
                 if (result.contains("打电话")) {
                     gettelmessage();
